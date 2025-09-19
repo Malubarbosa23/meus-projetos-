@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sorteador Roxo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f0fb;
+      font-family: 'Segoe UI', sans-serif;
+      color: #2e2e2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      width: 90%;
+      max-width: 700px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(126, 91, 239, 0.15);
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #7e5bef;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #6b5e85;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .item-box {
+      margin-bottom: 20px;
+    }
+
+    .item-box input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #d8cdf6;
+      background-color: #faf8ff;
+      color: #2e2e2e;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .item-box input:focus {
+      border-color: #7e5bef;
+      box-shadow: 0 0 0 4px rgba(126, 91, 239, 0.15);
+    }
+
+    .list-box {
+      margin-top: 20px;
+      text-align: left;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #d6c9f6;
+      border-radius: 12px;
+      padding: 10px;
+      background-color: #faf8ff;
+    }
+
+    .chip {
+      background: #e4d9fd;
+      color: #5e3dbb;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      margin-right: 8px;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .range-box {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .range-box input {
+      width: 100px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #d3cce9;
+      background: #faf8ff;
+      color: #2e2e2e;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .draw-btn {
+      margin-top: 40px;
+      padding: 16px 36px;
+      background-color: #7e5bef;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+
+    .draw-btn:hover {
+      background-color: #5e3dbb;
+      transform: scale(1.03);
+    }
+
+    .result-box {
+      margin-top: 40px;
+      background: #faf8ff;
+      padding: 24px;
+      border-radius: 16px;
+      border: 2px solid #e0d2fd;
+    }
+
+    .result-label {
+      color: #5e3dbb;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .result-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #7e5bef;
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>🎲 Sorteador Roxo</h1>
+    <div class="subtitle">Adicione nomes ou use um intervalo numérico</div>
+
+    <div class="item-box">
+      <input type="text" id="itemName" placeholder="Nome do item sorteado (ex: Brinde, Prêmio 1)" />
+    </div>
+
+    <div class="list-box" id="nameList">
+      <!-- Nomes adicionados aparecerão aqui -->
+    </div>
+
+    <div class="item-box">
+      <input type="text" id="nameInput" placeholder="Digite um nome" />
+      <button id="addNameBtn" class="draw-btn" style="margin-top: 10px;">Adicionar Nome</button>
+    </div>
+
+    <div class="range-box">
+      <input type="number" id="min" placeholder="Mínimo" value="1">
+      <input type="number" id="max" placeholder="Máximo" value="10">
+    </div>
+
+    <button class="draw-btn" id="drawBtn">Sortear Agora</button>
+
+    <div class="result-box" id="resultBox" style="display: none;">
+      <div class="result-label">Resultado:</div>
+      <div class="result-value" id="resultWinner">...</div>
+    </div>
+
+    <footer>
+      Feito com 💜 e sorte! — Digite nomes ou use intervalo de números.
+    </footer>
+  </div>
+
+  <script>
+    const nameInput = document.getElementById('nameInput');
+    const addNameBtn = document.getElementById('addNameBtn');
+    const drawBtn = document.getElementById('drawBtn');
+    const nameList = document.getElementById('nameList');
+    const resultBox = document.getElementById('resultBox');
+    const resultWinner = document.getElementById('resultWinner');
+    const minInput = document.getElementById('min');
+    const maxInput = document.getElementById('max');
+    const itemNameInput = document.getElementById('itemName');
+
+    // Adicionar nome à lista
+    addNameBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      if (name) {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = name;
+        nameList.appendChild(chip);
+        nameInput.value = '';
+      }
+    });
+
+    // Sortear
+    drawBtn.addEventListener('click', () => {
+      const chips = nameList.querySelectorAll('.chip');
+      const itemName = itemNameInput.value.trim() || 'Item';
+
+      let winner = '';
+
+      if (chips.length > 0) {
+        const names = Array.from(chips).map(chip => chip.textContent);
+        const randomIndex = Math.floor(Math.random() * names.length);
+        winner = names[randomIndex];
+      } else {
+        const min = parseInt(minInput.value, 10);
+        const max = parseInt(maxInput.value, 10);
+        if (isNaN(min) || isNaN(max) || max < min) {
+          alert('Digite um intervalo válido.');
+          return;
+        }
+        const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+        winner = randomNum;
+      }
+
+      resultWinner.textContent = `${itemName}: ${winner}`;
+      resultBox.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
