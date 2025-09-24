@@ -1,6 +1,6 @@
 🌾 Cidade do Espantalho  
 
-UM**Cidade do Espantalho**partiu a partir do antigo**Vale do Espantalho**, onde enfrentamos diversos oponentes e fortalecemos alianças entre aventureiros.  
+UM **Cidade do Espantalho** partiu a partir do antigo **Vale do Espantalho**, onde enfrentamos diversos oponentes e fortalecemos alianças entre aventureiros.  
 Com o crescimento da cidade, novas estruturas foram criadas para organizar recursos, informações, diplomacia e defesa, formando uma comunidade sólida e funcional.  
 
 Este repositório reúne toda a organização e documentação da cidade, dividida em setores:  
