@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel de Dano</title>
+  <style>
+    body {
+      background-color: #d6c8a2; /* bege mais escuro */
+      font-family: 'Verdana', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #5a2d0c; /* tom escuro de tijolo queimado */
+      margin-bottom: 30px;
+    }
+
+    .formulario {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    input, button {
+      padding: 8px;
+      font-size: 15px;
+      border: 1px solid #999;
+    }
+
+    button {
+      background-color: #854c2a; /* tijolo queimado */
+      color: #fff;
+      border: none;
+    }
+
+    table {
+      width: 100%;
+      border: 1px solid #854c2a;
+      border-collapse: collapse;
+      background-color: #f0e7cd;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #b29270;
+    }
+
+    th {
+      background-color: #854c2a;
+      color: white;
+    }
+
+    #total-geral {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: right;
+      color: #5a2d0c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Painel de Dano</h1>
+
+  <form id="formulario-dano" class="formulario">
+    <input type="text" id="nome" placeholder="Nome do jogador" required>
+    <input type="number" id="dano" placeholder="Dano causado" required min="1">
+    <button type="submit">Adicionar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Jogador</th>
+        <th>Dano Total</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-jogadores">
+      <!-- Jogadores aparecerão aqui -->
+    </tbody>
+  </table>
+
+  <div id="total-geral">Total de dano: 0</div>
+
+  <script>
+    const formulario = document.getElementById('formulario-dano');
+    const tabela = document.getElementById('tabela-jogadores');
+    const totalGeral = document.getElementById('total-geral');
+
+    const grupo = {};
+
+    formulario.addEventListener('submit', function(evento) {
+      evento.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const dano = parseInt(document.getElementById('dano').value);
+
+      if (!nome || isNaN(dano)) return;
+
+      if (!grupo[nome]) {
+        grupo[nome] = 0;
+      }
+
+      grupo[nome] += dano;
+
+      atualizarTabela();
+      formulario.reset();
+    });
+
+    function atualizarTabela() {
+      tabela.innerHTML = '';
+      let somaTotal = 0;
+
+      for (const pessoa in grupo) {
+        const tr = document.createElement('tr');
+        const dano = grupo[pessoa];
+        somaTotal += dano;
+
+        tr.innerHTML = `
+          <td>${pessoa}</td>
+          <td>${dano}</td>
+        `;
+        tabela.appendChild(tr);
+      }
+
+      totalGeral.textContent = `Total de dano: ${somaTotal}`;
+    }
+  </script>
+
+</body>
+</html>
+
